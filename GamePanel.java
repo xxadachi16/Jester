@@ -1,13 +1,19 @@
-import javax.imageio.ImageIO;
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.*;
-import java.lang.reflect.Array;
 import java.awt.image.BufferedImage;
+import java.io.*;
 import java.util.ArrayList;
+import javax.imageio.ImageIO;
+import javax.swing.*;
 
 public class GamePanel extends JPanel implements Runnable, KeyListener {
+
+   enum GameMode {
+      PLAYGROUND,
+      TEST,
+      RANDOM
+   }
+   GameMode mode;
    public static boolean[] keys = new boolean[256];
    private Thread gameThread;
    private Player player; // Ensure this is explicitly typed as Player
@@ -33,6 +39,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
          background = null; // Handle the error case
       }
       
+      mode = GameMode.PLAYGROUND;
+      System.out.println(mode);
    
       setPreferredSize(new Dimension(900, 700));
       setFocusable(true);
@@ -41,6 +49,45 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
       setLayout(new BorderLayout());
    
       tileMap = new TileMap("Maps/big.csv"); // Pass the correct file path
+      player = new Player(tileMap.psx*TileMap.TILE_SIZE, tileMap.psy*TileMap.TILE_SIZE, tileMap);
+      System.out.println("Spawning the player at " + tileMap.psx + ", " + tileMap.psy);
+   
+      for(int i = 0; i < tileMap.enemyPos.size(); i += 2) {
+         int x = tileMap.enemyPos.get(i);
+         int y = tileMap.enemyPos.get(i + 1);
+         enemies.add(new Enemy(x * TileMap.TILE_SIZE, y * TileMap.TILE_SIZE, tileMap));
+      }
+      
+      knight = new Knight(500, 600, tileMap);
+      
+      // Replace UIPanel with UIBarPanel
+      uiBarPanel = new UIBarPanel(player);
+      add(uiBarPanel, BorderLayout.SOUTH);
+   
+      gameThread = new Thread(this);
+      gameThread.start();
+   
+   }
+
+   public GamePanel(int n) throws IOException {
+      try {
+         background = ImageIO.read(getClass().getResource("Sprites/background.png"));
+      
+      } catch (IOException e) {
+         e.printStackTrace();
+         background = null; // Handle the error case
+      }
+      
+      mode = GameMode.TEST;
+      System.out.println(mode);
+   
+      setPreferredSize(new Dimension(900, 700));
+      setFocusable(true);
+      addKeyListener(this);
+   
+      setLayout(new BorderLayout());
+   
+      tileMap = new TileMap("Maps/BossRoom1.csv"); // Pass the correct file path
       player = new Player(tileMap.psx*TileMap.TILE_SIZE, tileMap.psy*TileMap.TILE_SIZE, tileMap);
       System.out.println("Spawning the player at " + tileMap.psx + ", " + tileMap.psy);
    
