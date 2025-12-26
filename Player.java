@@ -1,14 +1,10 @@
 import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.nio.Buffer;
-import java.util.Scanner;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.PrintWriter;
-
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
-import javax.swing.Timer;
 
 /**
  * The Player class represents a player entity in the game, extending the Entity
@@ -24,6 +20,7 @@ public class Player extends Entity {
    private int jumpHeight = 16;
    private double tempo;
    private double MAX_TEMPO = 11.0;
+   private int MAX_HP = 100;
    private int lastDirection;
    private BufferedImage sprite;
    private boolean swinging;
@@ -94,6 +91,8 @@ public class Player extends Entity {
          tempo = MAX_TEMPO;
       if (lastHp != hp && tempo > 0.5)
          tempo -= 0.5;
+      if (hp > MAX_HP)
+         hp = MAX_HP;
       lastHp = hp;
    }
 
@@ -357,4 +356,12 @@ public class Player extends Entity {
       return tempo;
    }
 
+   /**
+    * Gets the maximum health value for the player.
+    *
+    * @return The maximum health value.
+    */
+   public double getMAX_HP() {
+      return MAX_HP;
+   }
 }

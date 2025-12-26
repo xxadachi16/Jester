@@ -17,7 +17,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
    public static boolean[] keys = new boolean[256];
    private Thread gameThread;
    private Player player; // Ensure this is explicitly typed as Player
-   private Knight knight;
    private TileMap tileMap;
    private ArrayList<Enemy> enemies = new ArrayList<>();
    private boolean pause;
@@ -26,7 +25,11 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
    
 
    private int cameraX = 0;
+   private int cameraXMIN = 0;
+   private int cameraXMAX = 1000;
    private int cameraY = 0;
+   private int cameraYMIN = 0;
+   private int cameraYMAX = 1000; //figure out the math for this someday using the tiles but not right now
 
    private BufferedImage background;
 
@@ -58,7 +61,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
          enemies.add(new Enemy(x * TileMap.TILE_SIZE, y * TileMap.TILE_SIZE, tileMap));
       }
       
-      knight = new Knight(500, 600, tileMap);
       
       // Replace UIPanel with UIBarPanel
       uiBarPanel = new UIBarPanel(player);
@@ -97,7 +99,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
          enemies.add(new Enemy(x * TileMap.TILE_SIZE, y * TileMap.TILE_SIZE, tileMap));
       }
       
-      knight = new Knight(500, 600, tileMap);
       
       // Replace UIPanel with UIBarPanel
       uiBarPanel = new UIBarPanel(player);
@@ -126,16 +127,19 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
       for (int i = 0; i < enemies.size(); i++) {
          player.entityCollision(enemies.get(i));
          player.hurtboxCheck(enemies.get(i));
-         enemies.get(i).update(); // what the bruh
+         enemies.get(i).update(); // yes the bruh
       }
-      player.entityCollision(knight);
-      player.hurtboxCheck(knight);
       cameraX = player.getX() - 400; // Follow player with slight offset
-      if (cameraX < 0)
-         cameraX = 0;
-   
+      if (cameraX < cameraXMIN)
+         cameraX = cameraXMIN;
+      if (cameraX > cameraXMAX)
+         cameraX = cameraXMAX;
+
       cameraY = player.getY() - 400;
-   
+      if (cameraY < cameraYMIN)
+         cameraY = cameraYMIN;
+      if (cameraY > cameraYMAX)
+         cameraY = cameraYMAX;
       uiBarPanel.repaint(); // Ensure the UI panel updates
       
       /*if (keys[KeyEvent.VK_P]) {
@@ -145,13 +149,12 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
             pause = true;
          }
          System.out.println(pause);
-      }*/
+      }*/   
    }
 
    @Override
    protected void paintComponent(Graphics g) {
       player.update();
-      knight.update();
       super.paintComponent(g);
    
       // Draw the background scaled to fill the panel
@@ -164,7 +167,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
       for (int i = 0; i < enemies.size(); i++) {
          enemies.get(i).draw(g, cameraX, cameraY);
       }
-      knight.draw(g, cameraX, cameraY);
       tileMap.draw(g, cameraX, cameraY);
    
       tileMap.clearRemovedTiles();

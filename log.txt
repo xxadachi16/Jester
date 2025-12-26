@@ -1,1 +1,1 @@
-Coins: 3
+Coins: 0

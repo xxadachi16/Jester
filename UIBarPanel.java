@@ -1,7 +1,8 @@
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.DecimalFormat;
+import javax.swing.*;
 
 public class UIBarPanel extends JPanel implements ActionListener {
     private Player player;
@@ -21,17 +22,23 @@ public class UIBarPanel extends JPanel implements ActionListener {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
+        DecimalFormat df = new DecimalFormat("#.0");
+
         // Tempo bar
         g.setColor(Color.YELLOW);
-        g.fillRect(200, 25, (int) player.getMAX_TEMPO() * 25, 25);
+        g.fillRect(350, 25, (int) player.getMAX_TEMPO() * 25, 25);
         g.setColor(Color.MAGENTA);
-        g.fillRect(200, 25, (int) (player.getTempo()) * 25, 25);
+        g.fillRect(350, 25, (int) (player.getTempo()) * 25, 25);
+        g.setFont(new Font("Arial", Font.PLAIN, 20));
+        g.drawString("TEMPO: " + df.format(player.getTempo()) + "/" + player.getMAX_TEMPO(), 150, 50);
 
         // Health bar
         g.setColor(Color.RED);
-        g.fillRect(200, 50, 100 * 25 / 10, 25);
+        g.fillRect(350, 50, 100 * 25 / 10, 25);
         g.setColor(Color.GREEN);
-        g.fillRect(200, 50, player.getHp() * 25 / 10, 25);
+        g.fillRect(350, 50, player.getHp() * 25 / 10, 25);
+        g.setFont(new Font("Arial", Font.PLAIN, 20));
+        g.drawString("HEALTH: " + player.getHp() + "/" + (int)(player.getMAX_HP()), 150, 75);
 
            //Coin label
         g.setColor(Color.WHITE);

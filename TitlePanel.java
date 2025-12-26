@@ -8,6 +8,9 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 
 public class TitlePanel extends JPanel {
+
+    private String date = "12/26/25"; //update day
+
     private static final long serialVersionUID = 1L;
     public interface TitleActionListener {
         void onAction(String action);
@@ -127,7 +130,7 @@ public class TitlePanel extends JPanel {
         Graphics2D g2 = (Graphics2D) g;
         g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
-        g2.setColor(Color.WHITE);
+        g2.setColor(Color.MAGENTA);
         g2.setFont(new Font("SansSerif", Font.BOLD, 64));
         String title = "Jester";
         FontMetrics fm = g2.getFontMetrics();
@@ -135,8 +138,9 @@ public class TitlePanel extends JPanel {
         int y = getHeight() / 3;
         g2.drawString(title, x, y);
 
+        g2.setColor(Color.YELLOW);
         g2.setFont(new Font("SansSerif", Font.PLAIN, 20));
-        String hint = "Updated 12/24";
+        String hint = "Updated " + date;
         int hx = (getWidth() - g2.getFontMetrics().stringWidth(hint)) / 2;
         g2.drawString(hint, hx, y + 60);
     }
