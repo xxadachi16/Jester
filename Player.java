@@ -2,7 +2,6 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.io.PrintWriter;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
@@ -24,7 +23,9 @@ public class Player extends Entity {
    private int lastDirection;
    private BufferedImage sprite;
    private boolean swinging;
-   private boolean iFrames;
+   private boolean iFrames; //might not even be needed
+   private int iFramesCounter = 30; //lowk dependent on framerate I think but I don't care for now
+   private int iFrameHp; //I love creating problems for later
 
    Rectangle hurtbox;
    // values
@@ -74,26 +75,38 @@ public class Player extends Entity {
 
       if (tempo > 0)
          tempo -= tempo / 100;
-      if (hp <= 0) {
+      if (tempo < 0)
+         tempo = 0;
+      if (hp <= 0 && iFramesCounter <= 0) {
          hp = 100;
          x = tileMap.psx*TileMap.TILE_SIZE;
          y = tileMap.psy*TileMap.TILE_SIZE;
 
-         try {
+         /*try {
             PrintWriter writer = new PrintWriter("log.txt");
             writer.println("Coins: " + coins);
             writer.close();
          } catch (IOException e) {
             e.printStackTrace();
-         }
+         } */
       }
       if (tempo > MAX_TEMPO)
          tempo = MAX_TEMPO;
-      if (lastHp != hp && tempo > 0.5)
+      if (lastHp != hp && iFramesCounter <= 0) { //check to see if our guys took damage because polymorphism entity blah blah blah idk
          tempo -= 0.5;
+         iFrames = true;
+         iFrameHp = hp;
+         lastHp = hp;
+         iFramesCounter = 30;
+      }
       if (hp > MAX_HP)
          hp = MAX_HP;
-      lastHp = hp;
+      if (iFramesCounter <= 0) {
+         lastHp = hp;
+      } else {
+         iFramesCounter--;
+         hp = iFrameHp; //instead of preventing damage it just heals it back
+      }
    }
 
    /**

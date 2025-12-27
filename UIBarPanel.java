@@ -28,7 +28,7 @@ public class UIBarPanel extends JPanel implements ActionListener {
         g.setColor(Color.YELLOW);
         g.fillRect(350, 25, (int) player.getMAX_TEMPO() * 25, 25);
         g.setColor(Color.MAGENTA);
-        g.fillRect(350, 25, (int) (player.getTempo()) * 25, 25);
+        g.fillRect(350, 25, (int) (player.getTempo()*25), 25);
         g.setFont(new Font("Arial", Font.PLAIN, 20));
         g.drawString("TEMPO: " + df.format(player.getTempo()) + "/" + player.getMAX_TEMPO(), 150, 50);
 
