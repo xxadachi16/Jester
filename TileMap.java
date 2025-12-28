@@ -5,6 +5,9 @@ import java.util.List;
 
 public class TileMap {
     private int[][] map;
+    private String seed;
+    private static final int ROOM_COUNT = 10;
+    private static int roomNum = 0;
     private ArrayList<Tile> tiles;
     private ArrayList<Tile> removeTiles;
     public ArrayList<Integer> enemyPos;
@@ -12,10 +15,35 @@ public class TileMap {
     public int psy;
     public static final int TILE_SIZE = Tile.SIZE;
 
+    public TileMap() throws IOException {
+        enemyPos = new ArrayList<>();
+        removeTiles = new ArrayList<>();
+        map = generateRandomMap("veryEpicSeed"); //why yellow
+        tiles = new ArrayList<>();
+        generateTiles(); // Generate tiles after loading the map
+    }
+
+    public TileMap(String s, int n) throws IOException {
+        enemyPos = new ArrayList<>();
+        removeTiles = new ArrayList<>();
+        roomNum = n; //primarily to deal with the overloaded constructors n should almost always be 0
+        map = generateRandomMap(s);
+        tiles = new ArrayList<>();
+        generateTiles(); // Generate tiles after loading the map
+    }
+
     public TileMap(String csvFilePath) throws IOException {
         enemyPos = new ArrayList<>();
         removeTiles = new ArrayList<>();
         loadMap(csvFilePath);
+        tiles = new ArrayList<>();
+        generateTiles(); // Generate tiles after loading the map
+    }
+
+    public TileMap(int[][] m) {
+        enemyPos = new ArrayList<>();
+        removeTiles = new ArrayList<>();
+        map = m;
         tiles = new ArrayList<>();
         generateTiles(); // Generate tiles after loading the map
     }
@@ -32,6 +60,20 @@ public class TileMap {
         reader.close();
 
         map = rows.toArray(new int[0][]);
+    }
+
+    private int[][] loadMap(String csvFilePath, boolean isRoom) throws IOException { //merge this two methods later
+        List<int[]> rows = new ArrayList<>();
+        BufferedReader reader = new BufferedReader(new FileReader(csvFilePath));
+        String line;
+        while ((line = reader.readLine()) != null) {
+            String[] values = line.split(",");
+            int[] row = Arrays.stream(values).mapToInt(Integer::parseInt).toArray();
+            rows.add(row);
+        }
+        reader.close();
+
+        return rows.toArray(new int[0][]);
     }
 
     private void generateTiles() {
@@ -57,6 +99,126 @@ public class TileMap {
                 }
             }
         }
+    }
+
+    /*
+    all the generation stuff will be in this folder and the orignal final product stuff outside
+
+    12/28/25
+
+    first draft of random generation with seeds
+
+    seedInput(String s) takes in any characters from the player
+    seedFormater(String s) turns it into a usable seed that the player can use using the binary blah blah blah it doesn't really matter as long as no 1 x gives 2 y returns a number probably
+    roomRandom(int n) 
+    has a static value that ranges from 1-the total number of rooms created, 
+    takes the seed and puts it through an abirtrary formula mod(rooms possible) to pick a room then update a number, 
+    if the room is incompatible just go again, 
+    can and should be used for other things even though that would techinically make all random things bound by the room number,
+    returns an integer
+
+    worldCreator(int n) takes value from roomRandom and creates a new tileMap,
+    there's a big static map "world" containing on the maps currently loaded
+    EX: 
+    [ -1, -1, -1,
+      -1, -1, -1,
+       0, -1, -1, ]
+    start at world[world.length-1-r][c] and fill this in with room0 where r = c = 0
+    iterate through this filling in each -1 with a random room iterating r for every c
+    end at world[0][world[0].length-1] = -2 which is the goal room 
+    this will make it so the player always starts at the bottom and works his way to the top corner which takes advantage of the tempo mechanic
+
+    ! ! !
+    MAKE SURE EDGE ROOMS ARE DIFFERENT THAN THE MIDDLE ROOMS BECAUSE THE DOORS ARE DIFFERENT
+    ! ! !
+
+    if you want to have rooms that are fancy shapes it looks the same on the macro level but on the micro level just make sure it completes
+    EX: room 2 would actually just be 2 rooms put together with predictable exits
+
+    if you want the exits to not be predictable create the whole map and then remove chunks between each room
+
+    worldGenerator(int[][] w) takes worldCreator and turns it into a map
+    the advantage of having worldCreator and worldGenerator seperate even though world isn't static is uhhh so you can put in strings and worlds to get the same result which may come in useful later most likely probably
+    maybe do all this on a loop before player is loaded
+    */ 
+
+    public int[][] generateRandomMap(String seed)  throws IOException {
+        // Simple random map generation based on seed
+       int intSeed = seedFormater(seed);
+       return worldLoader(worldCreator(intSeed));
+    }
+
+    public int seedFormater(String s) {
+        int n = 0;
+        for (int i = 0; i < s.length(); i++) {
+            n += s.codePointAt(i); //maybe learn a little bit of computer science but it should work
+        }
+        return n % 1000000;
+    }
+
+    public static int roomRandom(int intSeed) {
+        //make sure to add and then random to we always start with room 0 for now
+        roomNum = ((roomNum + 7)*intSeed) % ROOM_COUNT; // Simple deterministic update
+        return roomNum;
+        /* 
+        // Simple pseudo-random number generator based on a static value
+        long a = 1664525;
+        long c = 1013904223;
+        long m = (1L << 32);
+        long seed = System.currentTimeMillis() % m; // Use current time as seed
+        seed = (a * seed + c) % m;
+        return (int)(seed % n); */
+    }
+
+    public int[][] worldCreator(int intSeed) {
+        int worldRows = 3;
+        int worldCols = 3;
+        int[][] world = new int[worldRows][worldCols];
+        for (int r = 0; r < worldRows; r++) {
+            for (int c = 0; c < worldCols; c++) { //make the edge rooms different
+                if (r == worldRows - 1 && c == 0) {
+                    world[r][c] = 0; // Start room
+                } else if (r == 0 && c == worldCols - 1) {
+                    world[r][c] = -2; // Goal room
+                } else if (r == 0 || r == worldRows - 1 || c == 0 || c == worldCols - 1) { // Edge rooms
+                    int rR = roomRandom(intSeed);
+                    while (rR > 7) { //O(n^3) :smile_blushing: we can and should fix this
+                        rR = roomRandom(intSeed);
+                    }
+                    world[r][c] = rR; // Inbetween rooms
+                } else {
+                    world[r][c] = roomRandom(intSeed);
+                }
+            }
+        }
+
+        return world;
+        
+    }
+
+    public int[][] worldLoader(int[][] w) throws IOException {
+        // For simplicity, assume each room is a 10x10 grid
+        int roomSize = 10;
+        int worldRows = w.length;
+        int worldCols = w[0].length;
+        int mapRows = worldRows * roomSize;
+        int mapCols = worldCols * roomSize;
+        int[][] fullMap = new int[mapRows][mapCols]; //resist the urge to 1 line
+
+        for (int r = 0; r < worldRows; r++) {
+            for (int c = 0; c < worldCols; c++) {
+                int[][] roomMap = loadMap("Maps/Seed/randRoom" + w[r][c] + ".csv", true); // Generate room map based on type
+
+                // Place roomMap into fullMap
+                for (int i = 0; i < roomSize; i++) {
+                    for (int j = 0; j < roomSize; j++) {
+                        fullMap[r * roomSize + i][c * roomSize + j] = roomMap[i][j];
+                    }
+                }
+            }
+        }
+
+        return fullMap;
     }
 
     public void draw(Graphics g, int cameraX, int cameraY) {
