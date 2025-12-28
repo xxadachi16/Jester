@@ -6,5 +6,10 @@ first draft of random generation with seeds
 
 seedInput(String s) takes in any characters from the player
 seedFormater(String s) turns it into a usable seed that the player can use using the binary blah blah blah it doesn't really matter as long as no 1 x gives 2 y returns a number probably
-seedReader(int n) has a static value that ranges from 1-the total number of rooms created, takes the seed and puts it through an abirtrary formula mod(rooms possible) to pick a room then update a number, returns an integer
+gameRandom(int n) 
+  has a static value that ranges from 1-the total number of rooms created, 
+  takes the seed and puts it through an abirtrary formula mod(rooms possible) to pick a room then update a number, 
+  if the room is incompatible just go again, 
+  can and should be used for other things,
+  returns an integer
 seedAction(int n) takes value from seedReader and creates a new tileMap, maybe do all this on a loop before player is loaded
