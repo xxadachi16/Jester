@@ -197,8 +197,8 @@ public class TileMap {
     }
 
     public int[][] worldLoader(int[][] w) throws IOException {
-        // For simplicity, assume each room is a 10x10 grid
-        int roomSize = 10;
+        // For simplicity, assume each room is a 20x20 grid
+        int roomSize = 20;
         int worldRows = w.length;
         int worldCols = w[0].length;
         int mapRows = worldRows * roomSize;
