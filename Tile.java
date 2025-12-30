@@ -1,21 +1,31 @@
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import javax.imageio.ImageIO;
 import java.io.IOException;
+import javax.imageio.ImageIO;
 
 public class Tile {
     public static final int SIZE = 32;
     private int x, y;
     private boolean solid;
     private BufferedImage sprite;
-    private boolean isCoin;
-
+    enum TileType {
+         AIR, //shouldn't really be used just used to ofset index to make it match with csv
+         GROUND,
+         SPIKE,
+         COLLECTABLE,
+         BOOST
+   }
+   private TileType type;
 
     public Tile(int x, int y, boolean solid, String spritePath) {
         this.x = x;
         this.y = y;
         this.solid = solid;
-        this.isCoin = false;
+        if (solid) {
+            this.type = TileType.GROUND;
+        } else {
+            this.type = TileType.COLLECTABLE;
+        }
         try {
             this.sprite = ImageIO.read(getClass().getResource(spritePath));
         } catch (IOException e) {
@@ -24,11 +34,12 @@ public class Tile {
         }
     }
 
-    public Tile(int x, int y, boolean solid, String spritePath, boolean isCoin) {
+
+    public Tile(int x, int y, boolean solid, String spritePath, int tileType) {
         this.x = x;
         this.y = y;
         this.solid = solid;
-        this.isCoin = isCoin;
+        this.type = TileType.values()[tileType];
         try {
             this.sprite = ImageIO.read(getClass().getResource(spritePath));
         } catch (IOException e) {
@@ -54,7 +65,10 @@ public class Tile {
         return new Rectangle(x, y, SIZE, SIZE);
     }
 
-    public boolean isCoin() {
-        return isCoin;
+    public int getType() {
+        return type.ordinal();
+    }
+    public void setType(int tileType) {
+        this.type = TileType.values()[tileType];
     }
 }

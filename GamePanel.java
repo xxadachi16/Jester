@@ -51,7 +51,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
    
       setLayout(new BorderLayout());
    
-      tileMap = new TileMap("Maps/big.csv"); // Pass the correct file path
+      tileMap = new TileMap("Maps/Seed/randRoom0.csv"); // Pass the correct file path
       player = new Player(tileMap.psx*TileMap.TILE_SIZE, tileMap.psy*TileMap.TILE_SIZE, tileMap);
       System.out.println("Spawning the player at " + tileMap.psx + ", " + tileMap.psy);
    

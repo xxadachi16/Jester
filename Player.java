@@ -23,6 +23,7 @@ public class Player extends Entity {
    private int lastDirection;
    private BufferedImage sprite;
    private boolean swinging;
+   private boolean isJumping = false; //jumping state for boost tiles
    private boolean iFrames; //might not even be needed
    private int iFramesCounter = 30; //lowk dependent on framerate I think but I don't care for now
    private int iFrameHp; //I love creating problems for later
@@ -133,11 +134,15 @@ public class Player extends Entity {
    @Override
    protected void collisionDetection() {
       for (Tile tile : tileMap.getTiles()) {
+         Rectangle r = tile.getBounds();
+          Rectangle bounds = new Rectangle(x, y, width, height);
+
          if (tile.isSolid()) {
-            Rectangle r = tile.getBounds();
-            Rectangle bounds = new Rectangle(x, y, width, height);
 
             if (bounds.intersects(r)) {
+               if (tile.getType() == 2) { // spike tile
+                  hp -= 10; //maybe make him jump too ouchie ouchie
+               } 
                if (bounds.y < r.y) {
                   y = r.y - height;
                   dy = 0;
@@ -151,15 +156,25 @@ public class Player extends Entity {
                   x = r.x + r.width;
                }
             }
-         } else if (tile.isCoin()) {
-            Rectangle r = tile.getBounds();
-            Rectangle bounds = new Rectangle(x, y, width, height);
+         } else if (tile.getType() == 3) { // coin tile
 
             if (bounds.intersects(r)) {
                tileMap.removeTile(tile);
                coins++;
             }
-         }
+         } else if (tile.getType() == 4) { // boost tile
+
+            if (bounds.intersects(r)) {
+               
+               if (!isJumping && (GamePanel.keys[KeyEvent.VK_W] || GamePanel.keys[KeyEvent.VK_SPACE])) { //will probably cause shenanigans with double jump if collisoin() and key() are both pressed
+                  dy = -jumpHeight;
+                  onGround = false;
+                  tempo += 1;
+                  isJumping = true;
+               }
+            }
+      
+            }
       }
    }
 
@@ -239,8 +254,11 @@ public class Player extends Entity {
          if (onGround) {
             dy = -jumpHeight;
             onGround = false;
+            isJumping = true;
             tempo += 1;
          }
+      } else {
+         isJumping = false; 
       }
       if (GamePanel.keys[KeyEvent.VK_E]) {
          if (!swinging) {

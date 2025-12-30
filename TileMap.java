@@ -82,13 +82,6 @@ public class TileMap {
                 int tileType = map[row][col];
                 String spritePath = "";
                 boolean solid = false;
-
-                if(tileType==1){
-                    tiles.add(new Tile(col * TILE_SIZE, row * TILE_SIZE, true, "/Sprites/rock.png"));
-                }
-                if (tileType == 4){
-                    tiles.add(new Tile(col * TILE_SIZE, row * TILE_SIZE, false, "/Sprites/bannana.png", true));
-                }
                 if (tileType == -1){
                     enemyPos.add(col);
                     enemyPos.add(row);
@@ -96,6 +89,21 @@ public class TileMap {
                 if (tileType == -2) {
                     psx = col;
                     psy = row;
+                }
+                if (tileType == -3) {
+                    //placeholder for door thingy for randomgen
+                }
+                if(tileType==1){
+                    tiles.add(new Tile(col * TILE_SIZE, row * TILE_SIZE, true, "/Sprites/rock.png"));
+                }
+                if (tileType == 2){
+                    tiles.add(new Tile(col * TILE_SIZE, row * TILE_SIZE, true, "/Sprites/spike.png", 2));
+                }
+                if (tileType == 3){
+                    tiles.add(new Tile(col * TILE_SIZE, row * TILE_SIZE, false, "/Sprites/bannana.png", 3));
+                }
+                if (tileType == 4) {
+                    tiles.add(new Tile(col * TILE_SIZE, row * TILE_SIZE, false, "/Sprites/boost.jpg", 4)); //woe is me
                 }
             }
         }
