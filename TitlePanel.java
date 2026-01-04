@@ -107,7 +107,7 @@ public class TitlePanel extends JPanel {
      */
     public void setBackgroundColor(Color color) {
         if (color == null) {
-            setBackground(Color.BLACK);
+            setBackground(Color.BLUE);
         } else {
             setBackground(color);
         }
@@ -142,7 +142,7 @@ public class TitlePanel extends JPanel {
         String title = "Jester";
         FontMetrics fm = g2.getFontMetrics();
         int x = (getWidth() - fm.stringWidth(title)) / 2;
-        int y = getHeight() / 3;
+        int y = getHeight() / 4;
         g2.drawString(title, x, y);
 
         g2.setColor(Color.YELLOW);
