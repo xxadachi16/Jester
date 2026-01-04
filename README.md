@@ -1,7 +1,7 @@
 	Jester
 
 -General
-fast paced game funky music I’ll write it idk how I’m going to do sprites. Block parry dodge ts with a time crunch and a momentum system. The more hits you land the more momentum you get. Momentum increases your damage and speed. If you get hit it removes all of it. If your attack gets dodged you lose some. Parry increases it a little or you keep it the same idk. Also this could be busted asl so there probably needs to be some counter measure like sturdiness or smth idk. Also it’s a fighting game with classes. Rouge like game. Main mode is fighting dungeon crawler probably until the final boss against The Jester and the other mode is just pvp I guess.
+fast paced hopefully web based online class based speedrunning rougelike game with funky music. Block parry dodge ts with a time crunch and a momentum system. The more hits you land the more momentum you get. Momentum increases your damage and speed. If you get hit it removes all of it. If your attack gets dodged you lose some. Also it’s a fighting game with classes. Rouge like game. Story mode is fighting dungeon crawler probably until the final boss against The Jester and the other mode is pvp speedrun kind of like the minecraft speedrunning one.
 
 -Gameplay
 So bro is a toy trying to fight his way out of the bedroom closet. You pick your toy and battle through the other toys around the bedroom. You’re also on a time limit because the kid is coming home from school soon. Roguelike upgrades as you pick up the weapons of toys you defeat but you can only pick one. 
