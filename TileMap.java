@@ -6,7 +6,7 @@ import java.util.List;
 public class TileMap {
     private int[][] map;
     private String seed;
-    private static final int ROOM_COUNT = 10;
+    private static final int ROOM_COUNT = 5;
     private static int roomNum = 0;
     private ArrayList<Tile> tiles;
     private ArrayList<Tile> removeTiles;
@@ -29,6 +29,18 @@ public class TileMap {
         roomNum = n; //primarily to deal with the overloaded constructors n should almost always be 0
         map = generateRandomMap(s);
         tiles = new ArrayList<>();
+        map = createBoundries(map);
+        generateTiles(); // Generate tiles after loading the map
+        psx = 3;
+        psy = map.length - 4; //PRAY it is not in a wall we really need to figure out this grid stuff
+    }
+
+    public TileMap(int[][] w, boolean b) throws IOException { //generate based on world
+        enemyPos = new ArrayList<>();
+        removeTiles = new ArrayList<>();
+        map = worldLoader(w);
+        tiles = new ArrayList<>();
+        map = createBoundries(map);
         generateTiles(); // Generate tiles after loading the map
     }
 
@@ -73,7 +85,7 @@ public class TileMap {
         }
         reader.close();
 
-        return rows.toArray(new int[0][]);
+        return rows.toArray(new int[0][]); //split might lowkey be better here
     }
 
     private void generateTiles() {
@@ -107,6 +119,22 @@ public class TileMap {
                 }
             }
         }
+    }
+
+    public int[][] createBoundries(int[][] m) {
+        // Copy the original map into the center of the bordered map
+        for (int r = 0; r < m.length; r++) {
+            if (r == 0 || r == m.length - 1) {
+            for (int c = 0; c < m[0].length; c++) {
+                m[r][c] = 1;
+            }
+            } else {
+                m[r][0] = 1;
+                m[r][m[0].length - 1] = 1;
+            }
+        }
+
+        return m;
     }
 
     /*
@@ -190,16 +218,22 @@ public class TileMap {
                     world[r][c] = -2; // Goal room
                 } else if (r == 0 || r == worldRows - 1 || c == 0 || c == worldCols - 1) { // Edge rooms
                     int rR = roomRandom(intSeed);
-                    while (rR > 7) { //O(n^3) :smile_blushing: we can and should fix this
+                    //not needed for now because we creatre boundries
+                    /* while (rR > 7) { //O(n^3) :smile_blushing: we can and should fix this
                         rR = roomRandom(intSeed);
-                    }
+                    } */
                     world[r][c] = rR; // Inbetween rooms
                 } else {
                     world[r][c] = roomRandom(intSeed);
                 }
             }
         }
-
+        for (int r = 0; r < worldRows; r++) {
+            for (int c = 0; c < worldCols; c++) {
+                System.out.print(world[r][c] + " ");
+            }
+            System.out.println();
+        }
         return world;
         
     }
@@ -211,7 +245,7 @@ public class TileMap {
         int worldCols = w[0].length;
         int mapRows = worldRows * roomSize;
         int mapCols = worldCols * roomSize;
-        int[][] fullMap = new int[mapRows][mapCols]; //resist the urge to 1 line
+        int[][] fullMap = new int[mapRows+1][mapCols+1]; //resist the urge to 1 line
 
         for (int r = 0; r < worldRows; r++) {
             for (int c = 0; c < worldCols; c++) {
@@ -247,5 +281,13 @@ public class TileMap {
             tiles.remove(tile);
         }
         removeTiles.clear();
+    }
+
+    public int getXBounds() {
+        return map[0].length * TILE_SIZE;
+    }
+    
+    public int getYBounds() {
+        return map.length * TILE_SIZE;
     }
 }

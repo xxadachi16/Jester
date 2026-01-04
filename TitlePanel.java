@@ -9,7 +9,7 @@ import javax.swing.*;
 
 public class TitlePanel extends JPanel {
 
-    private String date = "12/29/25 but at like 12am so basically 12/30/25"; //update day
+    private String date = "1/3/26"; //update day
 
     private static final long serialVersionUID = 1L;
     public interface TitleActionListener {
@@ -24,15 +24,16 @@ public class TitlePanel extends JPanel {
         setPreferredSize(new Dimension(800, 600));
         setBackground(Color.BLACK);
         setFocusable(true);
-        setBackgroundImageFromFile("Sprites/sadku.png", true);
+        setBackgroundImageFromFile("Sprites/smilena.png", true);
 
         // Buttons panel
         JPanel buttons = new JPanel();
         buttons.setOpaque(false);
         buttons.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 10));
 
-        JButton startBtn = new JButton("Start");
+        JButton startBtn = new JButton("Playground");
         JButton testBtn = new JButton("Test");
+        JButton randBtn = new JButton("Random");
         JButton exitBtn = new JButton("Exit");
 
         ActionListener al = new ActionListener() {
@@ -42,16 +43,22 @@ public class TitlePanel extends JPanel {
                 Object src = e.getSource();
                 if (src == startBtn) listener.onAction("start");
                 else if (src == testBtn) listener.onAction("test");
+                else if (src == randBtn) {
+                    String seed = JOptionPane.showInputDialog(TitlePanel.this, "Enter seed for random map:");
+                    listener.onAction("random" + seed);
+                }
                 else if (src == exitBtn) listener.onAction("exit");
             }
         };
 
         startBtn.addActionListener(al);
         testBtn.addActionListener(al);
+        randBtn.addActionListener(al);
         exitBtn.addActionListener(al);
 
         buttons.add(startBtn);
         buttons.add(testBtn);
+        buttons.add(randBtn);
         buttons.add(exitBtn);
 
         setLayout(new BorderLayout());

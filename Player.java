@@ -78,7 +78,7 @@ public class Player extends Entity {
          tempo -= tempo / 100;
       if (tempo < 0)
          tempo = 0;
-      if (hp <= 0 && iFramesCounter <= 0) {
+      if ((hp <= 0 && iFramesCounter <= 0) || y > tileMap.getYBounds() + 100) { //death reset //maybe don't use getYbounds and just store it or something idk
          hp = 100;
          x = tileMap.psx*TileMap.TILE_SIZE;
          y = tileMap.psy*TileMap.TILE_SIZE;

@@ -28,7 +28,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
    private int cameraXMIN = 0;
    private int cameraXMAX = 1000;
    private int cameraY = 0;
-   private int cameraYMIN = 0;
+   private int cameraYMIN = -1000;
    private int cameraYMAX = 1000; //figure out the math for this someday using the tiles but not right now
 
    private BufferedImage background;
@@ -51,7 +51,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
    
       setLayout(new BorderLayout());
    
-      tileMap = new TileMap("Maps/Seed/randRoom0.csv"); // Pass the correct file path
+      tileMap = new TileMap("Maps/big.csv"); // Pass the correct file path
+      
       player = new Player(tileMap.psx*TileMap.TILE_SIZE, tileMap.psy*TileMap.TILE_SIZE, tileMap);
       System.out.println("Spawning the player at " + tileMap.psx + ", " + tileMap.psy);
    
@@ -71,7 +72,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
    
    }
 
-   public GamePanel(int n) throws IOException {
+   public GamePanel(String n) throws IOException {
       try {
          background = ImageIO.read(getClass().getResource("Sprites/background.png"));
       
@@ -79,17 +80,29 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
          e.printStackTrace();
          background = null; // Handle the error case
       }
-      
-      mode = GameMode.TEST;
-      System.out.println(mode);
-   
+
+
       setPreferredSize(new Dimension(900, 700));
       setFocusable(true);
       addKeyListener(this);
-   
+
       setLayout(new BorderLayout());
    
-      tileMap = new TileMap("Maps/BossRoom1.csv"); // Pass the correct file path
+      if (n.equals("0")) {
+         tileMap = new TileMap("Maps/BossRoom1.csv"); // Pass the correct file path
+         mode = GameMode.TEST;
+      } else if (n.equals("1")) {
+         tileMap = new TileMap(new int[][] {{3, 4, 4}, {0, 1, 2}}, true);
+         mode = GameMode.RANDOM;
+      } else if (n.equals("Zainshouldfollowmeongithub")) {
+         tileMap = new TileMap();
+         mode = GameMode.RANDOM;
+      } else {
+         tileMap = new TileMap(n, 0);
+         mode = GameMode.RANDOM;
+         setCameraBounds(0, 1000,-4000, 4000);
+      }
+      System.out.println(mode);
       player = new Player(tileMap.psx*TileMap.TILE_SIZE, tileMap.psy*TileMap.TILE_SIZE, tileMap);
       System.out.println("Spawning the player at " + tileMap.psx + ", " + tileMap.psy);
    
@@ -151,7 +164,12 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
          System.out.println(pause);
       }*/   
    }
-
+   public void setCameraBounds(int xMin, int xMax, int yMin, int yMax) { //figure out this figure out later multiply it by 32 or maybe there's some final constant idk
+      this.cameraXMIN = xMin;
+      this.cameraXMAX = xMax;
+      this.cameraYMIN = yMin;
+      this.cameraYMAX = yMax;
+   }
    @Override
    protected void paintComponent(Graphics g) {
       player.update();
