@@ -20,16 +20,20 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
    private TileMap tileMap;
    private ArrayList<Enemy> enemies = new ArrayList<>();
    private boolean pause;
+   private boolean timeFreeze;
+   private int time = 30;
+   private boolean lastP;
+   private boolean lastT;
 
    private UIBarPanel uiBarPanel;
    
 
    private int cameraX = 0;
    private int cameraXMIN = 0;
-   private int cameraXMAX = 1000;
+   private int cameraXMAX = 20000;
    private int cameraY = 0;
-   private int cameraYMIN = -1000;
-   private int cameraYMAX = 1000; //figure out the math for this someday using the tiles but not right now
+   private int cameraYMIN = -20000;
+   private int cameraYMAX = 20000; //figure out the math for this someday using the tiles but not right now
 
    private BufferedImage background;
 
@@ -100,7 +104,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
       } else {
          tileMap = new TileMap(n, 0);
          mode = GameMode.RANDOM;
-         setCameraBounds(0, 1000,-4000, 4000);
+         setCameraBounds(0, 10000,-40000, 40000);
       }
       System.out.println(mode);
       player = new Player(tileMap.psx*TileMap.TILE_SIZE, tileMap.psy*TileMap.TILE_SIZE, tileMap);
@@ -136,11 +140,12 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
    }
 
    private void update() {
-      
+      if (!pause) {
       for (int i = 0; i < enemies.size(); i++) {
          player.entityCollision(enemies.get(i));
          player.hurtboxCheck(enemies.get(i));
          enemies.get(i).update(); // yes the bruh
+         }
       }
       cameraX = player.getX() - 400; // Follow player with slight offset
       if (cameraX < cameraXMIN)
@@ -155,14 +160,34 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
          cameraY = cameraYMAX;
       uiBarPanel.repaint(); // Ensure the UI panel updates
       
-      /*if (keys[KeyEvent.VK_P]) {
-         if (pause) {
-            pause = false;
-         } else {
-            pause = true;
+      //this little cluster should migrate soon but not now
+      if (timeFreeze) {
+         uiBarPanel.setTime(time); // Freeze time
+      } else if (keys[KeyEvent.VK_T] && keys[KeyEvent.VK_R]) {
+         uiBarPanel.setTime(45); // Reset time or set to desired value
+      }
+      if (lastP != keys[KeyEvent.VK_P] && keys[KeyEvent.VK_P]) {
+         lastP = true;
+         pause = !pause;
+         timeFreeze = !timeFreeze;
+         System.out.println("Pause " + pause);
+      } else if (!keys[KeyEvent.VK_P]) {
+         lastP = false;
+      }
+      if (lastT != keys[KeyEvent.VK_T] && keys[KeyEvent.VK_T]) {
+         if (!pause) {
+            lastT = true;
+            time = uiBarPanel.getTime();
+            System.out.println("Freeze " + timeFreeze);
+            timeFreeze = !timeFreeze;
          }
-         System.out.println(pause);
-      }*/   
+      } else if (!keys[KeyEvent.VK_T]) {
+         lastT = false;
+      }
+      if (!keys[KeyEvent.VK_T] && keys[KeyEvent.VK_R]) {
+         System.out.println("Reseting");
+         player.setHp(0);
+      }
    }
    public void setCameraBounds(int xMin, int xMax, int yMin, int yMax) { //figure out this figure out later multiply it by 32 or maybe there's some final constant idk
       this.cameraXMIN = xMin;
@@ -172,7 +197,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
    }
    @Override
    protected void paintComponent(Graphics g) {
-      player.update();
+      player.update(); //what the bruh
       super.paintComponent(g);
    
       // Draw the background scaled to fill the panel

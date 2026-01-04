@@ -20,6 +20,9 @@ public class TileMap {
         removeTiles = new ArrayList<>();
         map = generateRandomMap("veryEpicSeed"); //why yellow
         tiles = new ArrayList<>();
+        map = createBoundries(map);
+        psx = 3;
+        psy = map.length - 4;
         generateTiles(); // Generate tiles after loading the map
     }
 
@@ -105,18 +108,31 @@ public class TileMap {
                 if (tileType == -3) {
                     //placeholder for door thingy for randomgen
                 }
-                if(tileType==1){
+                if (tileType == -4) {
+                    tiles.add(new Tile(col * TILE_SIZE, row * TILE_SIZE, false, "/Sprites/trophy.jpg", -4)); //I'm sure this inconsistant naming won't cause any trouble :D
+                }
+                if(tileType==1){ //ground
                     tiles.add(new Tile(col * TILE_SIZE, row * TILE_SIZE, true, "/Sprites/rock.png"));
                 }
-                if (tileType == 2){
+                if (tileType == 2){ //spike
                     tiles.add(new Tile(col * TILE_SIZE, row * TILE_SIZE, true, "/Sprites/spike.png", 2));
                 }
-                if (tileType == 3){
+                if (tileType == 3){ //coin
                     tiles.add(new Tile(col * TILE_SIZE, row * TILE_SIZE, false, "/Sprites/bannana.png", 3));
                 }
-                if (tileType == 4) {
+                if (tileType == 4) { //boost
                     tiles.add(new Tile(col * TILE_SIZE, row * TILE_SIZE, false, "/Sprites/boost.jpg", 4)); //woe is me
                 }
+                if (tileType == 5) { //heal
+                    tiles.add(new Tile(col * TILE_SIZE, row * TILE_SIZE, false, "/Sprites/basedguri.png", 5)); 
+                }
+                if (tileType == 6) { //slow
+                    tiles.add(new Tile(col * TILE_SIZE, row * TILE_SIZE, false, "/Sprites/slow.png", 6)); 
+                }
+                if (tileType == 9) { //platform
+                    tiles.add(new Tile(col * TILE_SIZE, row * TILE_SIZE, true, "/Sprites/platform.png", 9)); 
+                }
+                
             }
         }
     }
@@ -207,8 +223,8 @@ public class TileMap {
     }
 
     public int[][] worldCreator(int intSeed) {
-        int worldRows = 3;
-        int worldCols = 3;
+        int worldRows = 4;
+        int worldCols = 4;
         int[][] world = new int[worldRows][worldCols];
         for (int r = 0; r < worldRows; r++) {
             for (int c = 0; c < worldCols; c++) { //make the edge rooms different

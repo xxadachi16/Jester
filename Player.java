@@ -141,19 +141,23 @@ public class Player extends Entity {
 
             if (bounds.intersects(r)) {
                if (tile.getType() == 2) { // spike tile
-                  hp -= 10; //maybe make him jump too ouchie ouchie
+                  hp -= 20; //maybe make him jump too ouchie ouchie
                } 
-               if (bounds.y < r.y) {
+               if (bounds.y < r.y) { //snaping will happen until we fix this
                   y = r.y - height;
                   dy = 0;
                   onGround = true; // collision is broken but it's lowkey a feature
-               } else if (dy < 0 && bounds.y > r.y) {
-                  y = r.y + r.height;
-                  dy = 0;
-               } else if (dx > 0 && bounds.x < r.x) {
-                  x = r.x - width;
-               } else if (dx < 0 && bounds.x > r.x) {
-                  x = r.x + r.width;
+               } else {
+                  if (tile.getType() != 9) { //maybe a clearner way to write this but 9 is platform tile
+                     if (dy < 0 && bounds.y > r.y) { 
+                        y = r.y + r.height;
+                        dy = 0;
+                     } else if (dx > 0 && bounds.x < r.x) {
+                        x = r.x - width;
+                     } else if (dx < 0 && bounds.x > r.x) {
+                        x = r.x + r.width;
+                     }
+                  }
                }
             }
          } else if (tile.getType() == 3) { // coin tile
@@ -174,7 +178,26 @@ public class Player extends Entity {
                }
             }
       
+         } else if (tile.getType() == 5) { // heal tile
+
+            if (bounds.intersects(r)) {
+               tileMap.removeTile(tile);
+               hp += 20;
             }
+         } else if (tile.getType() == 6) { //slow tile
+             if (bounds.intersects(r)) {
+               tempo -= 0.1;
+               if (tempo < 0) {
+                  tempo = 0;
+               }
+             }
+         } else if (tile.getType() == -4) { // trophy tile
+
+            if (bounds.intersects(r)) {
+               tileMap.removeTile(tile);
+               coins += 1000;
+            }
+         }
       }
    }
 

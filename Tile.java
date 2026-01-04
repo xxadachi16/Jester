@@ -13,7 +13,11 @@ public class Tile {
          GROUND,
          SPIKE,
          COLLECTABLE,
-         BOOST
+         BOOST,
+         HEALTH,
+         SLOW,
+         TROPHY,
+         PLATFORM
    }
    private TileType type;
 
@@ -39,7 +43,14 @@ public class Tile {
         this.x = x;
         this.y = y;
         this.solid = solid;
-        this.type = TileType.values()[tileType];
+        if (tileType == -4) {
+            this.type = TileType.TROPHY;
+        } else if(tileType == 9) {
+            this.type = TileType.PLATFORM;
+        } else { //temporary solution
+            this.type = TileType.values()[tileType];
+        }
+        
         try {
             this.sprite = ImageIO.read(getClass().getResource(spritePath));
         } catch (IOException e) {
@@ -66,9 +77,11 @@ public class Tile {
     }
 
     public int getType() {
+        if (type == TileType.TROPHY) return -4;
+        if (type == TileType.PLATFORM) return 9;
         return type.ordinal();
     }
-    public void setType(int tileType) {
+    public void setType(int tileType) { //don't use this until confident the enum stuff is figured out
         this.type = TileType.values()[tileType];
     }
 }

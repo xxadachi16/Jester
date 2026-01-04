@@ -65,4 +65,7 @@ public class UIBarPanel extends JPanel implements ActionListener {
    public int getTime() {
       return time;
    }
+   public int setTime(int t) {
+      return time = t;
+   }
 }
