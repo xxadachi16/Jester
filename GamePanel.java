@@ -113,6 +113,10 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
       for(int i = 0; i < tileMap.enemyPos.size(); i += 2) {
          int x = tileMap.enemyPos.get(i);
          int y = tileMap.enemyPos.get(i + 1);
+         if (x < 0) {
+            enemies.add(new Knight(-x * TileMap.TILE_SIZE, y * TileMap.TILE_SIZE, tileMap));
+            continue;
+         }
          enemies.add(new Enemy(x * TileMap.TILE_SIZE, y * TileMap.TILE_SIZE, tileMap));
       }
       
@@ -140,13 +144,13 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
    }
 
    private void update() {
-      if (!pause) {
+      //if (!pause) {
       for (int i = 0; i < enemies.size(); i++) {
          player.entityCollision(enemies.get(i));
          player.hurtboxCheck(enemies.get(i));
          enemies.get(i).update(); // yes the bruh
          }
-      }
+      //}
       cameraX = player.getX() - 400; // Follow player with slight offset
       if (cameraX < cameraXMIN)
          cameraX = cameraXMIN;
@@ -159,7 +163,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
       if (cameraY > cameraYMAX)
          cameraY = cameraYMAX;
       uiBarPanel.repaint(); // Ensure the UI panel updates
-      
+      /* 
       //this little cluster should migrate soon but not now
       if (timeFreeze) {
          uiBarPanel.setTime(time); // Freeze time
@@ -187,7 +191,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
       if (!keys[KeyEvent.VK_T] && keys[KeyEvent.VK_R]) {
          System.out.println("Reseting");
          player.setHp(0);
-      }
+      } */
    }
    public void setCameraBounds(int xMin, int xMax, int yMin, int yMax) { //figure out this figure out later multiply it by 32 or maybe there's some final constant idk
       this.cameraXMIN = xMin;

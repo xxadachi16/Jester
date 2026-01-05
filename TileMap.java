@@ -111,6 +111,10 @@ public class TileMap {
                 if (tileType == -4) {
                     tiles.add(new Tile(col * TILE_SIZE, row * TILE_SIZE, false, "/Sprites/trophy.jpg", -4)); //I'm sure this inconsistant naming won't cause any trouble :D
                 }
+                if (tileType == -10) {
+                    enemyPos.add(-col); //make this more sustainable
+                    enemyPos.add(row);
+                }
                 if(tileType==1){ //ground
                     tiles.add(new Tile(col * TILE_SIZE, row * TILE_SIZE, true, "/Sprites/rock.png"));
                 }

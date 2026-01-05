@@ -27,6 +27,7 @@ public class Player extends Entity {
    private boolean iFrames; //might not even be needed
    private int iFramesCounter = 30; //lowk dependent on framerate I think but I don't care for now
    private int iFrameHp; //I love creating problems for later
+   private int swingSpeed = 15;
 
    Rectangle hurtbox;
    // values
@@ -118,12 +119,18 @@ public class Player extends Entity {
     * @param e The enemy to check for collisions with.
     */
    public void hurtboxCheck(Enemy e) {
-      if (swinging) {
+      if (swinging && swingSpeed == 15) {
+         swingSpeed--;
          Rectangle bounds = new Rectangle(e.x, e.y-32, e.width+32, e.height+32);
          if (bounds.intersects(hurtbox)) {
             e.setHp(e.getHp() - damage);
             tempo += 0.5;
+            System.out.println("I dealing damage");
          }
+      } else if (swingSpeed < 15 && swingSpeed >= 0) {
+         swingSpeed--;
+      } else {
+         swingSpeed = 15;
       }
    }
 
@@ -134,6 +141,7 @@ public class Player extends Entity {
    @Override
    protected void collisionDetection() {
       for (Tile tile : tileMap.getTiles()) {
+         if (tile == null) continue;
          Rectangle r = tile.getBounds();
           Rectangle bounds = new Rectangle(x, y, width, height);
 
@@ -284,11 +292,9 @@ public class Player extends Entity {
          isJumping = false; 
       }
       if (GamePanel.keys[KeyEvent.VK_E]) {
-         if (!swinging) {
             swinging = true;
             hurtbox.x = x + 32 * lastDirection;// lowkey breaks when player goes to far to the right
             hurtbox.y = y;
-         }
       } else {
          swinging = false;
       }
@@ -370,8 +376,8 @@ public class Player extends Entity {
        * g.fillRect(200, 675, hp*25/10, 25);
        */
       // hurtbox
-      // g.setColor(Color.ORANGE);
-      // g.fillRect(hurtbox.x - cameraX, hurtbox.y - cameraY, width, height);
+       g.setColor(Color.ORANGE);
+       g.fillRect(hurtbox.x - cameraX, hurtbox.y - cameraY, width, height);
    }
 
    /**

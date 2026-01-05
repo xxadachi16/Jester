@@ -41,6 +41,7 @@ public abstract class Entity {
    }
    protected void collisionDetection() {
       for (Tile tile : tileMap.getTiles()) {
+         if (tile == null) continue;
          if (tile.isSolid()) {
             Rectangle r = tile.getBounds();
             Rectangle bounds = new Rectangle(x, y, width, height);

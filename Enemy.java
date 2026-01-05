@@ -2,14 +2,13 @@
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-
 import javax.imageio.ImageIO;
 
 public class Enemy extends Entity {
    private BufferedImage sprite;
    int shuffleCount;
    public Enemy(int x, int y, TileMap tileMap) {
-      super(x, y, 40, 40, 50, 10);
+      super(x, y, 40, 40, 20, 10);
 try {
          sprite = ImageIO.read(getClass().getResource("Sprites/enemy.png"));
       } catch (IOException e) {
