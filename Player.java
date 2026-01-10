@@ -20,7 +20,7 @@ public class Player extends Entity {
    private double tempo;
    private double MAX_TEMPO = 11.0;
    private int MAX_HP = 100;
-   private int lastDirection;
+   private int lastDirection; //used to multiply the movement
    private BufferedImage sprite;
    private boolean swinging;
    private boolean isJumping = false; //jumping state for boost tiles
@@ -125,7 +125,6 @@ public class Player extends Entity {
          if (bounds.intersects(hurtbox)) {
             e.setHp(e.getHp() - damage);
             tempo += 0.5;
-            System.out.println("I dealing damage");
          }
       } else if (swingSpeed < 15 && swingSpeed >= 0) {
          swingSpeed--;
