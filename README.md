@@ -11,7 +11,8 @@ Momentum is purple and yellow to match a jester type thing.
 Basically when you defeat an enemy you can either upgrade your hp or momentum reservoir, take their weapon, take their armor, or take one of their spells.
 
 -Spell system
-The spells are like special batteries for the toy. If you toy has 3 battery slots total, you could equip three weak baby triple a batteries for weaker spells, or 1 bigass gigachad single a battery for a strong spell.
+Some spells are like special batteries for the toy. If you toy has 3 battery slots total, you could equip three weak baby triple a batteries for weaker spells, or 1 bigass gigachad single a battery for a strong spell.
+Other spells are unique to class and cost tempo to cast.
 
 -Classes
 Each class is like their own kind of toy and would vary in battery slots, hp, momentum gain and conservation, and maybe weapon and speed but I don’t know about that. For example, if your guy was a toy plane, it would have low battery slots, hp, and conservation because planes are kind of fragile. But the planes momentum gain would be really good and it would also hit very hard and move fast. Compare this to like an action figure who is slower and would gain momentum slower than the plane but conserve it way better and have decent stats all around. The long term upgrades would make their niche even better as opposed to buffing all their stats.
