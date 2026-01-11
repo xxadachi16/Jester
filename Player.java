@@ -16,8 +16,8 @@ public class Player extends Entity {
    // physics
    private int MAX_HP = 100;
    private double MAX_TEMPO = 11.0;
-   private int MAX_SPEED = 5;
-   private int speed = 4;
+   private double MAX_SPEED = 5;
+   private double speed = 4;
    private int jumpHeight = 16;
    private double tempo = 0.0;
 
@@ -63,7 +63,7 @@ public class Player extends Entity {
       }
    }
 
-   public Player(int x, int y, TileMap tm, int h, int tmp, int spd, int dmg, String sp) {
+   public Player(int x, int y, TileMap tm, int h, int tmp, double spd, int dmg, String sp) {
       //I actually have no clue why Entity doesn't have tilemap in the constructor
       //maybe because it's abstract but idk also maybe tilemap should be global so the player can change the map
       super(x, y, 32, 32, h, dmg);
@@ -89,45 +89,10 @@ public class Player extends Entity {
     */
    @Override
    public void update() {
-
       keys();
       move();
+      statCheck();
       spriteHandler();
-
-      if (tempo > 0)
-         tempo -= tempo / 100;
-      if (tempo < 0)
-         tempo = 0;
-      if ((hp <= 0 && iFramesCounter <= 0) || y > tileMap.getYBounds() + 100) { //death reset //maybe don't use getYbounds and just store it or something idk
-         hp = 100;
-         x = tileMap.psx*TileMap.TILE_SIZE;
-         y = tileMap.psy*TileMap.TILE_SIZE;
-
-         /*try {
-            PrintWriter writer = new PrintWriter("log.txt");
-            writer.println("Coins: " + coins);
-            writer.close();
-         } catch (IOException e) {
-            e.printStackTrace();
-         } */
-      }
-      if (tempo > MAX_TEMPO)
-         tempo = MAX_TEMPO;
-      if (lastHp != hp && iFramesCounter <= 0) { //check to see if our guys took damage because polymorphism entity blah blah blah idk
-         tempo -= 0.5;
-         iFrames = true;
-         iFrameHp = hp;
-         lastHp = hp;
-         iFramesCounter = 30;
-      }
-      if (hp > MAX_HP)
-         hp = MAX_HP;
-      if (iFramesCounter <= 0) {
-         lastHp = hp;
-      } else {
-         iFramesCounter--;
-         hp = iFrameHp; //instead of preventing damage it just heals it back
-      }
    }
 
    /**
@@ -289,11 +254,11 @@ public class Player extends Entity {
    private void keys() {
       if (GamePanel.keys[KeyEvent.VK_A]) {
          dx -= speed;
-         dx = Math.max(dx, -MAX_SPEED - (int) (tempo));
+         dx = (int)(Math.max(dx, -MAX_SPEED - tempo));
          lastDirection = -1;
       } else if (GamePanel.keys[KeyEvent.VK_D]) {
          dx += speed;
-         dx = Math.min(dx, MAX_SPEED + (int) (tempo));
+         dx = (int)(Math.min(dx, MAX_SPEED + tempo));
          lastDirection = 1;
       } else {
          dx = 0;
@@ -333,6 +298,39 @@ public class Player extends Entity {
             coins -= 30;
             // make it lighter bruh
          }
+      }
+   }
+
+   public void statCheck() {
+      
+      if (tempo > 0)
+         tempo -= tempo / 100;
+      if (tempo < 0)
+         tempo = 0;
+      if ((hp <= 0 && iFramesCounter <= 0) || y > tileMap.getYBounds() + 100) { //death reset //maybe don't use getYbounds and just store it or something idk
+         hp = 100;
+         x = tileMap.psx*TileMap.TILE_SIZE;
+         y = tileMap.psy*TileMap.TILE_SIZE;
+      }
+      if (tempo > MAX_TEMPO)
+         tempo = MAX_TEMPO;
+      if (lastHp != hp && iFramesCounter <= 0) { //check to see if our guys took damage because polymorphism entity blah blah blah idk
+         tempo -= 0.5;
+         iFrames = true;
+         iFrameHp = hp;
+         lastHp = hp;
+         iFramesCounter = 30;
+      }
+      if (hp > MAX_HP)
+         hp = MAX_HP;
+      if (iFramesCounter <= 0) {
+         lastHp = hp;
+      } else {
+         iFramesCounter--;
+         hp = iFrameHp; //instead of preventing damage it just heals it back
+      }
+      if (speed > MAX_SPEED) {
+         speed -= 0.5;
       }
    }
 
@@ -441,5 +439,13 @@ public class Player extends Entity {
     */
    public double getMAX_HP() {
       return MAX_HP;
+   }
+
+   public double getSpeed() {
+      return speed;
+   }
+
+   public void setSpeed(double s) {
+      speed = s;
    }
 }

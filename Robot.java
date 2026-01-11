@@ -9,13 +9,17 @@ public class Robot extends Model {
 
    public void moveAbility() {
       //shoulder bash from deep
-      dx += 5; //maybe change to just solid speed stat
+      setSpeed(getSpeed() + 5); //maybe change to just solid speed stat
+      System.out.println("Dash!");
    }
    public void spellAbility() {
       //rockets
       //hurtbox.setWidth(100);
+      System.out.println("Rockets!");
    }
    public void createAbility() {
       //armor up
+      hp += 20;
+      System.out.println("Armor!");
    }
 }
