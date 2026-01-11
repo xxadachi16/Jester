@@ -14,15 +14,16 @@ import javax.swing.ImageIcon;
 public class Player extends Entity {
 
    // physics
-   private int speed = 4;
-   private int MAX_SPEED = 5;
-   private int jumpHeight = 16;
-   private double tempo;
-   private double MAX_TEMPO = 11.0;
    private int MAX_HP = 100;
-   private int lastDirection; //used to multiply the movement
+   private double MAX_TEMPO = 11.0;
+   private int MAX_SPEED = 5;
+   private int speed = 4;
+   private int jumpHeight = 16;
+   private double tempo = 0.0;
+
+   private int lastDirection = 1; //used to multiply the movement
    private BufferedImage sprite;
-   private boolean swinging;
+   private boolean swinging = false;
    private boolean isJumping = false; //jumping state for boost tiles
    private boolean iFrames; //might not even be needed
    private int iFramesCounter = 30; //lowk dependent on framerate I think but I don't care for now
@@ -52,8 +53,6 @@ public class Player extends Entity {
       this.tileMap = tileMap;
       lastHp = 100;
       hurtbox = new Rectangle(x, y, width, height);
-      swinging = false;
-      lastDirection = 1;
 
       // Load the sprite image
       try {
@@ -61,6 +60,26 @@ public class Player extends Entity {
       } catch (IOException e) {
          e.printStackTrace();
          sprite = null; // Handle the error appropriately
+      }
+   }
+
+   public Player(int x, int y, TileMap tm, int h, int tmp, int spd, int dmg, String sp) {
+      //I actually have no clue why Entity doesn't have tilemap in the constructor
+      //maybe because it's abstract but idk also maybe tilemap should be global so the player can change the map
+      super(x, y, 32, 32, h, dmg);
+      MAX_HP = h;
+      MAX_TEMPO = tempo;
+      MAX_SPEED = spd;
+
+      tileMap = tm;
+      lastHp = 100;
+      hurtbox = new Rectangle(x, y, width, height);
+
+      try {
+         sprite = ImageIO.read(getClass().getResource("Sprites/"+sp+".png")); 
+      } catch (IOException e) {
+         e.printStackTrace();
+         sprite = null;
       }
    }
 
@@ -375,8 +394,8 @@ public class Player extends Entity {
        * g.fillRect(200, 675, hp*25/10, 25);
        */
       // hurtbox
-       g.setColor(Color.ORANGE);
-       g.fillRect(hurtbox.x - cameraX, hurtbox.y - cameraY, width, height);
+       //g.setColor(Color.ORANGE);
+       //g.fillRect(hurtbox.x - cameraX, hurtbox.y - cameraY, width, height);
    }
 
    /**

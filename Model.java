@@ -9,8 +9,7 @@ public abstract class Model extends Player {
       super(x, y, tileMap);
    }
    public Model(String n, String t, String desc, int x, int y, TileMap tileMap, int hp, int tmp, int spd, int dmg, String sprite) {
-      super(x, y, tileMap);
-      //implement customizaion later
+      super(x, y, tileMap, hp, tmp, spd, dmg, sprite);
       name = n;
       title = t;
       description = desc;
