@@ -135,6 +135,7 @@ public class Player extends Entity {
                   hp -= 20; //maybe make him jump too ouchie ouchie
                } 
                if (bounds.y < r.y) { //snaping will happen until we fix this
+                  if (tile.getType() == 9 && dy < 0) continue;
                   y = r.y - height;
                   dy = 0;
                   onGround = true; // collision is broken but it's lowkey a feature

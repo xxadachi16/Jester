@@ -16,6 +16,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
    GameMode mode;
    public static boolean[] keys = new boolean[256];
    private Thread gameThread;
+   private int tickRate = 16;
    private Player player; // Ensure this is explicitly typed as Player
    private TileMap tileMap;
    private ArrayList<Enemy> enemies = new ArrayList<>();
@@ -136,7 +137,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
          update();
          repaint();
          try {
-            Thread.sleep(16);
+            Thread.sleep(tickRate);
          } catch (InterruptedException e) {
             e.printStackTrace();
          }
